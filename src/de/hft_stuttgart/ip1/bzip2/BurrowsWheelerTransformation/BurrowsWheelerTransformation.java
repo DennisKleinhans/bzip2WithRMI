@@ -1,10 +1,8 @@
-package de.hft_stuttgart.ip1.bzip2.volltext;
+package de.hft_stuttgart.ip1.bzip2.BurrowsWheelerTransformation;
 
-import java.nio.IntBuffer;
 import java.util.*;
-import java.util.stream.IntStream;
 
-public class Volltext {
+public class BurrowsWheelerTransformation {
     private final static String endMarker = "\uFFED";
     /*
         Class to help implementing rotated String comparison
