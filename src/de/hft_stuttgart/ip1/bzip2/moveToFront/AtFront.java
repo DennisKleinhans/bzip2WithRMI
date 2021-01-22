@@ -1,6 +1,5 @@
 package de.hft_stuttgart.ip1.bzip2.moveToFront;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -10,8 +9,8 @@ public class AtFront {
     /**
      Transform the given input according to the algorithm given above for transformation
      */
-    public static short[] transform(byte []input) {
-        short[] finalBytes = new short[input.length];
+    public static byte[] transform(byte []input) {
+        byte[] finalBytes = new byte[input.length];
         byte[] sortInput = Arrays.copyOf(input, input.length);
         Arrays.sort(sortInput);
         byte[] bytes = new byte[sortInput[sortInput.length - 1] + 1];
@@ -50,8 +49,8 @@ public class AtFront {
     /**
      Transform the given input according to the algorithm given above for retransformation
      */
-    public static byte[] retransform(short [] input) {
-        short[] sortInput = Arrays.copyOf(input, input.length);
+    public static byte[] retransform(byte [] input) {
+        byte[] sortInput = Arrays.copyOf(input, input.length);
         Arrays.sort(sortInput);
         byte[] bytes = new byte[sortInput[sortInput.length - 1] + 1];
         ArrayList<Byte> list = new ArrayList<>();
@@ -59,7 +58,7 @@ public class AtFront {
         byte[] result = new byte[input.length];
 
         // Liste mit den Bytes am richtigen Index füllen
-        for(short i : input){
+        for(byte i : input){
             bytes[i] = (byte) i;
         }
 

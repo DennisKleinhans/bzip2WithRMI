@@ -10,15 +10,15 @@ public class RunLength {
     /**
      * Transform the given input according to the algorithm given above for transformation
      */
-    public static short[] transform(short[] input) {
-        ArrayList<Short> list = new ArrayList<>();
+    public static byte[] transform(byte[] input) {
+        ArrayList<Byte> list = new ArrayList<>();
 
         for (int i = 0, count = 1; i < input.length; i++) {
             if (i + 1 < input.length && input[i] == 0 && input[i+1] == 0){
                 count++;
             }
             else if(input[i] != 0 && count == 1){
-                list.add((short) (input[i] +1));
+                list.add((byte) (input[i] +1));
             }
             else{
                 if(count == 1){
@@ -29,23 +29,23 @@ public class RunLength {
                     if(count % 2 == 0){
                         if(count == 2)
                         {
-                            list.add((short) RLEA);
+                            list.add((byte) RLEA);
                             count = count - 2;
                         }
                         else{
-                            list.add((short) RLEB);
+                            list.add((byte) RLEB);
                             count = count - 2;
                         }
                     }
                     else {
-                        list.add((short) RLEA);
+                        list.add((byte) RLEA);
                         count = count - 1;
                     }
                 }
                 count = 1;
             }
         }
-        short[] result = new short[list.size()];
+        byte[] result = new byte[list.size()];
         for(int i = 0; i < result.length; i++){
             result[i] = list.get(i);
         }
@@ -55,9 +55,9 @@ public class RunLength {
     /**
      * Transform the given input according to the algorithm given above for retransformation
      */
-    public static short[] retransform(short[] input) {
-        ArrayList<Short> resultList = new ArrayList<>();
-        ArrayList<Short> list = new ArrayList<>();
+    public static byte[] retransform(byte[] input) {
+        ArrayList<Byte> resultList = new ArrayList<>();
+        ArrayList<Byte> list = new ArrayList<>();
 
         for(int i = 0, count = 0; i < input.length; i++){
             if(input[i] == 1 || input[i] == 0){
@@ -76,7 +76,7 @@ public class RunLength {
                             }
                         }
                         for(int k = 0; k < tmp; k++){
-                            resultList.add((short)0);
+                            resultList.add((byte) 0);
                         }
                         count = 0;
                         list.removeAll(list);
@@ -93,10 +93,10 @@ public class RunLength {
                 }
             }
             else {
-                resultList.add((short) (input[i] - 1));
+                resultList.add((byte) (input[i] - 1));
             }
         }
-        short[] result = new short[resultList.size()];
+        byte[] result = new byte[resultList.size()];
         for(int i = 0; i < result.length; i++){
             result[i] = resultList.get(i);
         }
