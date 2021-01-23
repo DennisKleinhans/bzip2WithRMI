@@ -1,7 +1,5 @@
 package de.hft_stuttgart.ip1.rmi.interfaces;
 
-import de.hft_stuttgart.ip1.Sender;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

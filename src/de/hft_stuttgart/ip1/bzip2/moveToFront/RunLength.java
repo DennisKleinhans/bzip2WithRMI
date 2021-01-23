@@ -1,6 +1,7 @@
 package de.hft_stuttgart.ip1.bzip2.moveToFront;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class RunLength {
@@ -11,95 +12,84 @@ public class RunLength {
      * Transform the given input according to the algorithm given above for transformation
      */
     public static byte[] transform(byte[] input) {
-        ArrayList<Byte> list = new ArrayList<>();
+        LinkedList<Integer> zwischenSpeicher = new LinkedList<>();
+        for(int i = 0; i < input.length; i++) {
+            byte anzahl;
+            if(input[i] == 0) {
+                anzahl = 0;
+                for(int j = i; j < input.length; j++) {
+                    if(input[j] != 0) {
+                        while(anzahl > 0) {
+                            if(anzahl % 2 == 1) {
+                                zwischenSpeicher.add(RLEA);
+                            } else {
+                                zwischenSpeicher.add(RLEB);
+                            }
+                            anzahl--;
+                            anzahl/=2;
+                        }
+                        i--;
+                        break;
+                    }
+                    anzahl++;
+                    i++;
+                }
+            } else {
+                zwischenSpeicher.add(input[i] + 1);
+            }
+        }
 
-        for (int i = 0, count = 1; i < input.length; i++) {
-            if (i + 1 < input.length && input[i] == 0 && input[i+1] == 0){
-                count++;
-            }
-            else if(input[i] != 0 && count == 1){
-                list.add((byte) (input[i] +1));
-            }
-            else{
-                if(count == 1){
-                    list.add(input[i]);
-                }
-                // berechnung
-                while(count != RLEA && count != RLEB){
-                    if(count % 2 == 0){
-                        if(count == 2)
-                        {
-                            list.add((byte) RLEA);
-                            count = count - 2;
-                        }
-                        else{
-                            list.add((byte) RLEB);
-                            count = count - 2;
-                        }
-                    }
-                    else {
-                        list.add((byte) RLEA);
-                        count = count - 1;
-                    }
-                }
-                count = 1;
-            }
+        byte[] output = new byte[zwischenSpeicher.size()];
+
+        for(int i = 0; i < output.length; i++) {
+            output[i] = zwischenSpeicher.get(i).byteValue();
         }
-        byte[] result = new byte[list.size()];
-        for(int i = 0; i < result.length; i++){
-            result[i] = list.get(i);
-        }
-        return result;
+        return output;
     }
 
     /**
      * Transform the given input according to the algorithm given above for retransformation
      */
     public static byte[] retransform(byte[] input) {
-        ArrayList<Byte> resultList = new ArrayList<>();
-        ArrayList<Byte> list = new ArrayList<>();
-
-        for(int i = 0, count = 0; i < input.length; i++){
-            if(input[i] == 1 || input[i] == 0){
-                if(count != 0){
-                    list.add(input[i]);
-                    count++;
-
-                    if(i + 1 < input.length && input[i+1] > 1){
-                        short tmp = 0;
-                        for(int j = 0; j < list.size(); j++){
-                            if(list.get(j) == RLEB){
-                                tmp = (short) (tmp + 2*(j+1));
-                            }
-                            else if(list.get(j) == RLEA){
-                                tmp = (short) (tmp + Math.pow(2, j));
+        LinkedList<Integer> zwischenSpeicher = new LinkedList<>();
+        for(int i = 0; i < input.length; i++) {
+            LinkedList<Byte> dekomp;
+            if(input[i] == 0 || input[i] == 1) {
+                dekomp = new LinkedList<>();
+                for(int j = i; j < input.length; j++) {
+                    if(input[j] == RLEA) {
+                        dekomp.addFirst(input[j]);
+                        i++;
+                    } else if(input[j] == RLEB) {
+                       dekomp.addFirst(input[j]);
+                       i++;
+                    } else {
+                        byte anzahl = 0;
+                        int groesse = dekomp.size();
+                        for(int k = 0; k < groesse; k++) {
+                            if(dekomp.getLast() == RLEA) {
+                                anzahl += Math.pow(2, k);
+                                dekomp.removeLast();
+                            } else if(dekomp.getLast() == RLEB) {
+                                anzahl += 2*Math.pow(2, k);
+                                dekomp.removeLast();
                             }
                         }
-                        for(int k = 0; k < tmp; k++){
-                            resultList.add((byte) 0);
+                        for(int k = 0; k < anzahl; k++) {
+                            zwischenSpeicher.add(0);
                         }
-                        count = 0;
-                        list.removeAll(list);
+                        i--;
+                        break;
                     }
                 }
-                else {
-                    if(i + 1 < input.length && input[i+1] > 1){
-                        resultList.add(input[i]);
-                    }
-                    else {
-                        list.add(input[i]);
-                        count++;
-                    }
-                }
-            }
-            else {
-                resultList.add((byte) (input[i] - 1));
+            } else {
+                zwischenSpeicher.add(input[i] - 1);
             }
         }
-        byte[] result = new byte[resultList.size()];
-        for(int i = 0; i < result.length; i++){
-            result[i] = resultList.get(i);
+        byte[] output = new byte[zwischenSpeicher.size()];
+        for(int i = 0; i < output.length; i++) {
+            output[i] = zwischenSpeicher.get(i).byteValue();
         }
-        return result;
+        return output;
     }
 }
