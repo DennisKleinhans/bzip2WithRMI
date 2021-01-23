@@ -1,5 +1,6 @@
 package de.hft_stuttgart.ip1.rmi.server;
 
+import de.hft_stuttgart.ip1.rmi.interfaces.FileServer;
 import de.hft_stuttgart.ip1.rmi.interfaces.FileTransfer;
 import de.hft_stuttgart.ip1.rmi.interfaces.Registration;
 import java.rmi.AlreadyBoundException;
@@ -8,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Main implements FileTransfer {
+public class Main implements FileServer,FileTransfer {
     public static void main(String[] args) {
         System.out.println("Starting the Server");
         RegistrationImpl registrationImpl = new RegistrationImpl();
@@ -40,5 +41,10 @@ public class Main implements FileTransfer {
     @Override
     public boolean deleteFile(String name) throws RemoteException {
         return false;
+    }
+
+    @Override
+    public FileTransfer getTransfer(String user, String password) throws RemoteException {
+        return null;
     }
 }
