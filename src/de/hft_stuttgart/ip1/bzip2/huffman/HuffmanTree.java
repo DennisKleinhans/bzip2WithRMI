@@ -33,6 +33,7 @@ public class HuffmanTree {
     public byte[] encode(byte[] input) {
 
         ArrayList<Byte> resultList = new ArrayList<>();
+
         byte b = 0;
         int counter = 0;
         for (int i = 0; i < input.length; i++) {
