@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class Bzip2 {
 
-    public byte[] encode(String code){
+    public static byte[] encode(String code){
         String burrowsWheelerTransform = BurrowsWheelerTransformation.transform(code);
 
         byte[] atFrontTransform = AtFront.transform(burrowsWheelerTransform.getBytes(StandardCharsets.UTF_8));
@@ -41,7 +41,7 @@ public class Bzip2 {
         return result;
     }
 
-    public String decode(byte[] input){
+    public static String decode(byte[] input){
 
         byte[] distro = Arrays.copyOf(input, 256*4);
         byte[] code = Arrays.copyOfRange(input,distro.length, input.length);
