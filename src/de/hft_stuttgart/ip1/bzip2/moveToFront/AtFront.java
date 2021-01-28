@@ -1,7 +1,5 @@
 package de.hft_stuttgart.ip1.bzip2.moveToFront;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 

@@ -6,11 +6,9 @@ import de.hft_stuttgart.ip1.bzip2.huffman.HuffmanDistribution;
 import de.hft_stuttgart.ip1.bzip2.huffman.HuffmanTree;
 import de.hft_stuttgart.ip1.bzip2.moveToFront.AtFront;
 import de.hft_stuttgart.ip1.bzip2.moveToFront.RunLength;
-
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.stream.Stream;
+
 
 
 public class Bzip2 {
@@ -38,7 +36,7 @@ public class Bzip2 {
         byte[] result = Arrays.copyOf(distroData,distroData.length + huffmanCode.length);
         System.arraycopy(huffmanCode, 0, result, distroData.length, huffmanCode.length);
 
-        return result;
+       return result;
     }
 
     public static String decode(byte[] input){
@@ -64,5 +62,18 @@ public class Bzip2 {
         String originalString = BurrowsWheelerTransformation.retransform(atFrontRetransformAsString);
 
         return originalString;
+    }
+
+    public static void main(String[] args) {
+        byte[] encode1 = Bzip2.encode("Otto");
+        String decode1 = Bzip2.decode(encode1);
+        byte[] encode2 = Bzip2.encode(decode1);
+        String decode2 = Bzip2.decode(encode2);
+
+        System.out.println(decode2);
+        byte[] data = new byte[]{-17,-65,-83,116,0,111,0};
+        System.out.println(Arrays.toString("otto".getBytes(StandardCharsets.UTF_8)));
+        String s = new String(data);
+        System.out.println(s);
     }
 }

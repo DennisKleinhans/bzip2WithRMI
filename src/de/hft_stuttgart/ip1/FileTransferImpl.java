@@ -1,11 +1,9 @@
 package de.hft_stuttgart.ip1;
 
+import de.hft_stuttgart.ip1.bzip2.Bzip2;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FileTransferImpl implements FileTransfer {
 
@@ -39,13 +37,24 @@ public class FileTransferImpl implements FileTransfer {
 
     @Override
     public void sendFile(String name, byte[] data) throws RemoteException {
-        files.put(name, data);
+        if(user.equals("bzip2")) {
+            String decode = Bzip2.decode(data);
+            byte[] file = decode.getBytes(StandardCharsets.UTF_8);
+            files.put(name, file);
+        } else {
+            files.put(name, data);
+        }
     }
 
     @Override
     public byte[] receiveFile(String name) throws RemoteException {
-
-        byte[] file = files.get(name);
+        byte[] file;
+        if(user.equals("bzip2")) {
+            String data = new String(files.get(name));
+            file = Bzip2.encode(data);
+        } else {
+            file = files.get(name);
+        }
         return file;
     }
 
@@ -57,5 +66,9 @@ public class FileTransferImpl implements FileTransfer {
         } else {
             return false;
         }
+    }
+
+    public String getUser(){
+        return user;
     }
 }
