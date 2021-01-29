@@ -19,20 +19,15 @@ public class RunLength {
                 anzahl = 0;
                 for(int j = i; j < input.length; j++) {
                     if(input[j] != 0) {
-                        while(anzahl > 0) {
-                            if(anzahl % 2 == 1) {
-                                zwischenSpeicher.add(RLEA);
-                            } else {
-                                zwischenSpeicher.add(RLEB);
-                            }
-                            anzahl--;
-                            anzahl/=2;
-                        }
+                        helpTransform(anzahl, zwischenSpeicher);
                         i--;
                         break;
                     }
                     anzahl++;
                     i++;
+                    if (i >= input.length){
+                        helpTransform(anzahl, zwischenSpeicher);
+                    }
                 }
             } else {
                 zwischenSpeicher.add(input[i] + 1);
@@ -45,6 +40,19 @@ public class RunLength {
             output[i] = zwischenSpeicher.get(i).byteValue();
         }
         return output;
+    }
+
+    //Hilfsmethode fuer Transform
+    static void helpTransform(byte anzahl, LinkedList<Integer> zwischenSpeicher){
+        while(anzahl > 0){
+            if (anzahl%2 == 1) {
+                zwischenSpeicher.add(RLEA);
+            }else{
+                zwischenSpeicher.add(RLEB);
+            }
+            anzahl--;
+            anzahl/=2;
+        }
     }
 
     /**
@@ -66,20 +74,15 @@ public class RunLength {
                     } else {
                         byte anzahl = 0;
                         int groesse = dekomp.size();
-                        for(int k = 0; k < groesse; k++) {
-                            if(dekomp.getLast() == RLEA) {
-                                anzahl += Math.pow(2, k);
-                                dekomp.removeLast();
-                            } else if(dekomp.getLast() == RLEB) {
-                                anzahl += 2*Math.pow(2, k);
-                                dekomp.removeLast();
-                            }
-                        }
-                        for(int k = 0; k < anzahl; k++) {
-                            zwischenSpeicher.add(0);
-                        }
+                        helpRetransform(groesse, dekomp, anzahl, zwischenSpeicher);
                         i--;
                         break;
+                    }
+
+                    if (i >= input.length) {
+                        short anzahl = 0;
+                        int groesse = dekomp.size();
+                        helpRetransform(groesse, dekomp, anzahl, zwischenSpeicher);
                     }
                 }
             } else {
@@ -91,5 +94,21 @@ public class RunLength {
             output[i] = zwischenSpeicher.get(i).byteValue();
         }
         return output;
+    }
+
+    //Hilfsmethode zur Retransform
+    static void helpRetransform(int groesse, LinkedList<Byte> dekomp, short anzahl, LinkedList<Integer> zwischenSpeicher){
+        for (int k = 0; k < groesse; k++) {
+            if (dekomp.getLast() == RLEA) {
+                anzahl += Math.pow(2,k);
+                dekomp.removeLast();
+            }else if (dekomp.getLast() == RLEB) {
+                anzahl += 2*Math.pow(2,k);
+                dekomp.removeLast();
+            }
+        }
+        for (int k = 0; k < anzahl; k++) {
+            zwischenSpeicher.add(0);
+        }
     }
 }
