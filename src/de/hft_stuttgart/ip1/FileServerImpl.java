@@ -14,28 +14,30 @@ public class FileServerImpl implements FileServer{
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
 
-        FileServer fs = new FileServerImpl();
-
         Registry registry = LocateRegistry.createRegistry(28765);
-        UnicastRemoteObject.exportObject(fs, 0);
+        FileServer fs = (FileServer) UnicastRemoteObject.exportObject(new FileServerImpl(), 0);
         registry.bind(FileServer.class.getName(), fs);
-
-        FileTransfer fileTransfer = fs.getTransfer("plain", "12345");
-
-        Scanner sc = new Scanner(System.in);
-        String command;
-        while (true) {
-            command = sc.next();
-
-            if(command.equals("list")) {
-                System.out.println(Arrays.toString(fileTransfer.listFiles("*")));
-            }
-        }
     }
 
     @Override
     public FileTransfer getTransfer(String user, String password) throws RemoteException {
-        return new FileTransferImpl(user);
+        if(user.equals(FileTransferImpl.PLAIN) && password.equals("12345")) {
+            return new FileTransferImpl(user);
+        }
+        if (user.equals(FileTransferImpl.BWT) && password.equals("12345")) {
+            return new FileTransferImpl(user);
+        }
+        if(user.equals(FileTransferImpl.MTF) && password.equals("12345")) {
+            return new FileTransferImpl(user);
+        }
+        if(user.equals(FileTransferImpl.RLE) && password.equals("12345")) {
+            return new FileTransferImpl(user);
+        }
+        if(user.equals(FileTransferImpl.BZIP2) && password.equals("12345")) {
+            return new FileTransferImpl(user);
+        } else {
+            return null;
+        }
     }
 
 }

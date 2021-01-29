@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class FileClientImpl {
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry( 28765);  //lida2.fkc.hft-stuttgart.de
+        Registry registry = LocateRegistry.getRegistry( "lida2.fkc.hft-stuttgart.de",28765);  //lida2.fkc.hft-stuttgart.de
         FileServer fileServer = (FileServer) registry.lookup(FileServer.class.getName());   // de.hft_stuttgart.ip1.common.FileServer
         FileTransferImpl fileTransfer = (FileTransferImpl) fileServer.getTransfer("bzip2", "12345");
 

@@ -7,6 +7,12 @@ import java.util.*;
 
 public class FileTransferImpl implements FileTransfer {
 
+    public static final String PLAIN = "plain";
+    public static final String BWT = "bwt";
+    public static final String MTF = "mtf";
+    public static final String RLE = "rle";
+    public static final String BZIP2 = "bzip2";
+
     private Map<String, byte[]> files;
     private String user;
 
@@ -37,7 +43,7 @@ public class FileTransferImpl implements FileTransfer {
 
     @Override
     public void sendFile(String name, byte[] data) throws RemoteException {
-        if(user.equals("bzip2")) {
+        if(user.equals(BZIP2)) {
             String decode = Bzip2.decode(data);
             byte[] file = decode.getBytes(StandardCharsets.UTF_8);
             files.put(name, file);
@@ -49,7 +55,7 @@ public class FileTransferImpl implements FileTransfer {
     @Override
     public byte[] receiveFile(String name) throws RemoteException {
         byte[] file;
-        if(user.equals("bzip2")) {
+        if(user.equals(BZIP2)) {
             String data = new String(files.get(name));
             file = Bzip2.encode(data);
         } else {
