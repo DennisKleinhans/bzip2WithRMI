@@ -22,19 +22,19 @@ public class FileServerImpl implements FileServer{
     @Override
     public FileTransfer getTransfer(String user, String password) throws RemoteException {
         if(user.equals(FileTransferImpl.PLAIN) && password.equals("12345")) {
-            return new FileTransferImpl(user);
+            return new FileTransferImpl(FileTransferImpl.PLAIN);
         }
         if (user.equals(FileTransferImpl.BWT) && password.equals("12345")) {
-            return new FileTransferImpl(user);
+            return new FileTransferImpl(FileTransferImpl.BWT);
         }
         if(user.equals(FileTransferImpl.MTF) && password.equals("12345")) {
-            return new FileTransferImpl(user);
+            return new FileTransferImpl(FileTransferImpl.MTF);
         }
         if(user.equals(FileTransferImpl.RLE) && password.equals("12345")) {
-            return new FileTransferImpl(user);
+            return new FileTransferImpl(FileTransferImpl.RLE);
         }
         if(user.equals(FileTransferImpl.BZIP2) && password.equals("12345")) {
-            return new FileTransferImpl(user);
+            return new FileTransferImpl(FileTransferImpl.BZIP2);
         } else {
             return null;
         }

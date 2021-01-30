@@ -33,6 +33,7 @@ public class Bzip2 {
         HuffmanTree tree = new HuffmanTree(distro);
         byte[] huffmanCode = tree.encode(runLengthTransform);
 
+        // distro an den Anfang des Arrays schreiben
         byte[] result = Arrays.copyOf(distroData,distroData.length + huffmanCode.length);
         System.arraycopy(huffmanCode, 0, result, distroData.length, huffmanCode.length);
 

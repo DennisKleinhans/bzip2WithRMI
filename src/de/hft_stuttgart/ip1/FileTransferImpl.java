@@ -1,6 +1,10 @@
 package de.hft_stuttgart.ip1;
 
+import de.hft_stuttgart.ip1.bzip2.BurrowsWheelerTransformation.BurrowsWheelerTransformation;
 import de.hft_stuttgart.ip1.bzip2.Bzip2;
+import de.hft_stuttgart.ip1.bzip2.moveToFront.AtFront;
+import de.hft_stuttgart.ip1.bzip2.moveToFront.RunLength;
+
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -43,23 +47,57 @@ public class FileTransferImpl implements FileTransfer {
 
     @Override
     public void sendFile(String name, byte[] data) throws RemoteException {
-        if(user.equals(BZIP2)) {
-            String decode = Bzip2.decode(data);
-            byte[] file = decode.getBytes(StandardCharsets.UTF_8);
-            files.put(name, file);
-        } else {
-            files.put(name, data);
+        byte[] originalData;
+
+        switch (user) {
+            case PLAIN:
+                files.put(name, data);
+                break;
+            case BWT:
+                String stringData = new String(data);
+                String retransformed = BurrowsWheelerTransformation.retransform(stringData);
+                originalData = retransformed.getBytes(StandardCharsets.UTF_8);
+                files.put(name, originalData);
+                break;
+            case RLE:
+                originalData = RunLength.retransform(data);
+                files.put(name, originalData);
+                break;
+            case MTF:
+                originalData = AtFront.retransform(data);
+                files.put(name, originalData);
+                break;
+            case BZIP2:
+                originalData = Bzip2.decode(data).getBytes(StandardCharsets.UTF_8);
+                files.put(name, originalData);
+                break;
         }
     }
 
     @Override
     public byte[] receiveFile(String name) throws RemoteException {
         byte[] file;
-        if(user.equals(BZIP2)) {
-            String data = new String(files.get(name));
-            file = Bzip2.encode(data);
-        } else {
-            file = files.get(name);
+
+        switch (user) {
+            case PLAIN:
+                file = files.get(name);
+                break;
+            case BWT:
+                byte[] data = files.get(name);
+                String stringData = BurrowsWheelerTransformation.transform(new String(data));
+                file = stringData.getBytes(StandardCharsets.UTF_8);
+                break;
+            case RLE:
+                file = RunLength.transform(files.get(name));
+                break;
+            case MTF:
+                file = AtFront.transform(files.get(name));
+                break;
+            case BZIP2:
+                file = Bzip2.encode(new String(files.get(name)));
+                break;
+            default:
+                file = "no success".getBytes(StandardCharsets.UTF_8);
         }
         return file;
     }
@@ -72,9 +110,5 @@ public class FileTransferImpl implements FileTransfer {
         } else {
             return false;
         }
-    }
-
-    public String getUser(){
-        return user;
     }
 }
