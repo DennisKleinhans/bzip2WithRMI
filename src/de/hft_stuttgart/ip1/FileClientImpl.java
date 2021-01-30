@@ -31,7 +31,7 @@ public class FileClientImpl {
         password = sc.next();
 
 
-        Registry registry = LocateRegistry.getRegistry(host,28765);  //lida2.fkc.hft-stuttgart.de 28765
+        Registry registry = LocateRegistry.getRegistry(host,port);  //lida2.fkc.hft-stuttgart.de 28765
         FileServer fileServer = (FileServer) registry.lookup(FileServer.class.getName());
         FileTransfer fileTransfer = fileServer.getTransfer(user, password);
 
