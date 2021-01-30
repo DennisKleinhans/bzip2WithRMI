@@ -36,7 +36,7 @@ public class FileServerImpl implements FileServer{
         if(user.equals(FileTransferImpl.BZIP2) && password.equals("12345")) {
             return new FileTransferImpl(FileTransferImpl.BZIP2);
         } else {
-            return null;
+            throw new IllegalArgumentException("username or password incorrect");
         }
     }
 

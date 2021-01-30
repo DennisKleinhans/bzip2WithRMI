@@ -27,13 +27,9 @@ public class FileClientImpl {
         password = sc.next();
 
 
-        Registry registry = LocateRegistry.getRegistry(  28765);  //lida2.fkc.hft-stuttgart.de
+        Registry registry = LocateRegistry.getRegistry("lida2.fkc.hft-stuttgart.de",28765);  //lida2.fkc.hft-stuttgart.de
         FileServer fileServer = (FileServer) registry.lookup(FileServer.class.getName());
         FileTransfer fileTransfer = fileServer.getTransfer(user, password);
-
-        if(fileTransfer == null) {
-            throw new IllegalArgumentException("username or password incorrect");
-        }
 
         System.out.println("Logged in");
 
