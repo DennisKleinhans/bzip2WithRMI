@@ -37,17 +37,24 @@ public class FileClientImpl {
 
         System.out.println("Logged in");
 
+        StringBuilder stringBuilder;
+
         while (true) {
             command = sc.nextLine();
-            String[] s = command.split(":");
+            String[] s = command.split(" ");
 
             switch (s[0]) {
                 case "list":
                     System.out.println(Arrays.toString(fileTransfer.listFiles(s[1])));
                     break;
                 case "send":
+                    stringBuilder = new StringBuilder();
+                    for(int i = 2; i < s.length; i++){
+                        stringBuilder.append(s[i] + " ");
+                    }
+
                     if(user.equals(FileTransferImpl.PLAIN)){
-                        fileTransfer.sendFile(s[1], s[2].getBytes(StandardCharsets.UTF_8));
+                        fileTransfer.sendFile(s[1], stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
                     }
                     if(user.equals(FileTransferImpl.BWT)) {
                         fileTransfer.sendFile(s[1], BurrowsWheelerTransformation.transform(s[2]).getBytes(StandardCharsets.UTF_8));
