@@ -6,6 +6,9 @@ import de.hft_stuttgart.ip1.bzip2.moveToFront.AtFront;
 import de.hft_stuttgart.ip1.bzip2.moveToFront.RunLength;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -32,17 +35,8 @@ public class FileTransferImpl implements FileTransfer {
 
     @Override
     public String[] listFiles(String pattern) throws RemoteException {
-        if (pattern.equals("*")) {
-            String[] fileNames = new String[files.size()];
-            int i = 0;
-            for (Map.Entry<String, byte[]> entry : files.entrySet()) {
-                fileNames[i] = entry.getKey();
-                i++;
-            }
-            return fileNames;
-        } else {
-            return null;
-        }
+        PathMatcher pm = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+        return files.keySet().stream().filter(x -> pm.matches(Path.of(x))).toArray(String[]::new);
     }
 
     @Override

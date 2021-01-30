@@ -14,26 +14,28 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class FileClientImpl {
-    public static String user;
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
 
-        String password;
+        String password, user, host, command;
+        int port;
 
         Scanner sc = new Scanner(System.in);
+        System.out.println("Host: ");
+        host = sc.next();
+        System.out.println("Port: ");
+        port = sc.nextInt();
         System.out.println("username: ");
         user = sc.next();
         System.out.println("password: ");
         password = sc.next();
 
 
-        Registry registry = LocateRegistry.getRegistry("lida2.fkc.hft-stuttgart.de",28765);  //lida2.fkc.hft-stuttgart.de
+        Registry registry = LocateRegistry.getRegistry(host,28765);  //lida2.fkc.hft-stuttgart.de 28765
         FileServer fileServer = (FileServer) registry.lookup(FileServer.class.getName());
         FileTransfer fileTransfer = fileServer.getTransfer(user, password);
 
         System.out.println("Logged in");
-
-        String command;
 
         while (true) {
             command = sc.nextLine();
@@ -91,6 +93,8 @@ public class FileClientImpl {
                 case "delete":
                     fileTransfer.deleteFile(s[1]);
                     break;
+                case "exit":
+                    System.exit(0);
             }
         }
     }
